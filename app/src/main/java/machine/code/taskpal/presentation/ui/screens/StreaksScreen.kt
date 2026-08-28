@@ -1,4 +1,4 @@
-package machine.code.taskpal.ui
+package machine.code.taskpal.presentation.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -21,16 +21,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import machine.code.taskpal.ui.theme.TaskpalTheme
+import machine.code.taskpal.presentation.ui.components.TaskpalBottomNavigation
+import machine.code.taskpal.presentation.ui.theme.TaskpalTheme
 
 @Composable
-fun StreaksScreen(onNavigate: (String) -> Unit) {
+fun StreaksScreen(onNavigate: (String) -> Unit, onBack: () -> Unit = {}) {
     Scaffold(
-        bottomBar = {
-            TaskpalBottomNavigation(
-                currentScreen = "streaks", onScreenSelected = onNavigate
-            )
-        }, containerColor = MaterialTheme.colorScheme.background
+        bottomBar = { TaskpalBottomNavigation(currentScreen = "streaks", onScreenSelected = onNavigate) },
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -40,7 +38,7 @@ fun StreaksScreen(onNavigate: (String) -> Unit) {
                 .padding(horizontal = 20.dp)
         ) {
             Spacer(modifier = Modifier.height(20.dp))
-
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -60,9 +58,9 @@ fun StreaksScreen(onNavigate: (String) -> Unit) {
                     )
                 }
             }
-
+            
             Spacer(modifier = Modifier.height(24.dp))
-
+            
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -76,18 +74,18 @@ fun StreaksScreen(onNavigate: (String) -> Unit) {
                         Text(text = "🏆", fontSize = 64.sp)
                     }
                 }
-
+                
                 Spacer(modifier = Modifier.height(16.dp))
-
+                
                 Text(
                     text = "7-Day Streak!",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
-
+                
                 Spacer(modifier = Modifier.height(8.dp))
-
+                
                 Text(
                     text = "Way to go, buddy! You've been crushing\ntasks 7 days in a row ✔️",
                     fontSize = 14.sp,
@@ -96,31 +94,32 @@ fun StreaksScreen(onNavigate: (String) -> Unit) {
                     lineHeight = 20.sp
                 )
             }
-
+            
             Spacer(modifier = Modifier.height(32.dp))
-
+            
             Text(
                 text = "Progress Visualization",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
-
+            
             Spacer(modifier = Modifier.height(16.dp))
-
+            
             Row(
-                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 val days = listOf("Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun")
                 val completed = listOf(true, true, true, true, true, true, false)
-
+                
                 days.forEachIndexed { index, day ->
                     DayItem(day = day, isCompleted = completed[index])
                 }
             }
-
+            
             Spacer(modifier = Modifier.height(20.dp))
-
+            
             Column {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -140,13 +139,13 @@ fun StreaksScreen(onNavigate: (String) -> Unit) {
                     trackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
             }
-
+            
             Spacer(modifier = Modifier.height(32.dp))
-
+            
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                color = Color(0xFFFFF9C4).copy(alpha = 0.5f) // Light yellow
+                color = Color(0xFFFFF9C4).copy(alpha = 0.5f)
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -166,9 +165,9 @@ fun StreaksScreen(onNavigate: (String) -> Unit) {
                     )
                 }
             }
-
+            
             Spacer(modifier = Modifier.height(24.dp))
-
+            
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
@@ -197,7 +196,7 @@ fun StreaksScreen(onNavigate: (String) -> Unit) {
                     )
                 }
             }
-
+            
             Spacer(modifier = Modifier.height(80.dp))
         }
     }

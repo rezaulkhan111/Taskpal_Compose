@@ -1,4 +1,4 @@
-package machine.code.taskpal.ui
+package machine.code.taskpal.presentation.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,16 +20,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import machine.code.taskpal.ui.theme.TaskpalTheme
+import machine.code.taskpal.presentation.ui.components.TaskItem
+import machine.code.taskpal.presentation.ui.components.TaskpalBottomNavigation
+import machine.code.taskpal.presentation.ui.theme.TaskpalTheme
 
 @Composable
-fun HomeScreen(onNavigate: (String) -> Unit) {
+fun HomeScreen(onNavigate: (String) -> Unit, onBack: () -> Unit = {}) {
     Scaffold(
-        bottomBar = {
-            TaskpalBottomNavigation(
-                currentScreen = "home", onScreenSelected = onNavigate
-            )
-        }, floatingActionButton = {
+        bottomBar = { TaskpalBottomNavigation(currentScreen = "home", onScreenSelected = onNavigate) },
+        floatingActionButton = {
             FloatingActionButton(
                 onClick = { },
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -39,7 +38,8 @@ fun HomeScreen(onNavigate: (String) -> Unit) {
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add Task")
             }
-        }, containerColor = MaterialTheme.colorScheme.background
+        },
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -49,38 +49,44 @@ fun HomeScreen(onNavigate: (String) -> Unit) {
                 .padding(horizontal = 20.dp)
         ) {
             Spacer(modifier = Modifier.height(20.dp))
-
+            
             HomeHeader()
-
+            
             Spacer(modifier = Modifier.height(24.dp))
-
+            
             QuickActionGrid()
-
+            
             Spacer(modifier = Modifier.height(24.dp))
-
+            
             MotivationCard()
-
+            
             Spacer(modifier = Modifier.height(32.dp))
-
+            
             SectionHeader(title = "Today's Task", actionText = "See all")
             Spacer(modifier = Modifier.height(16.dp))
-
+            
             TaskItem(
-                title = "Make Sandwich and Pie", dueTime = "Due 11am today", isCompleted = false
+                title = "Make Sandwich and Pie",
+                dueTime = "Due 11am today",
+                isCompleted = false
             )
-
+            
             Spacer(modifier = Modifier.height(12.dp))
-
+            
             TaskItem(
-                title = "Say a prayer by 1pm", dueTime = "Due 1pm today", isCompleted = false
+                title = "Say a prayer by 1pm",
+                dueTime = "Due 1pm today",
+                isCompleted = false
             )
-
+            
             Spacer(modifier = Modifier.height(12.dp))
-
+            
             TaskItem(
-                title = "Call my Brother", dueTime = "Due 3pm today", isCompleted = false
+                title = "Call my Brother",
+                dueTime = "Due 3pm today",
+                isCompleted = false
             )
-
+            
             Spacer(modifier = Modifier.height(80.dp))
         }
     }
@@ -89,7 +95,8 @@ fun HomeScreen(onNavigate: (String) -> Unit) {
 @Composable
 fun HomeHeader() {
     Row(
-        modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
@@ -97,9 +104,9 @@ fun HomeHeader() {
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f))
         )
-
+        
         Spacer(modifier = Modifier.width(12.dp))
-
+        
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = "Good morning Christopher \uD83D\uDC4B",
@@ -113,7 +120,7 @@ fun HomeHeader() {
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-
+        
         IconButton(onClick = { }) {
             Icon(
                 imageVector = Icons.Outlined.Notifications,
@@ -177,31 +184,28 @@ fun QuickActionCard(
         shadowElevation = 0.5.dp
     ) {
         Column(
-            modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(iconColor.copy(alpha = 0.1f)), contentAlignment = Alignment.Center
+                    .background(iconColor.copy(alpha = 0.1f)),
+                contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    icon,
-                    contentDescription = null,
-                    tint = iconColor,
-                    modifier = Modifier.size(24.dp)
-                )
+                Icon(icon, contentDescription = null, tint = iconColor, modifier = Modifier.size(24.dp))
             }
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = title,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
+                text = title, 
+                fontSize = 14.sp, 
+                fontWeight = FontWeight.SemiBold, 
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = subtitle,
-                fontSize = 12.sp,
+                text = subtitle, 
+                fontSize = 12.sp, 
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -216,10 +220,12 @@ fun MotivationCard() {
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Row(
-            modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "\uD83C\uDF89", fontSize = 24.sp
+                text = "\uD83C\uDF89",
+                fontSize = 24.sp
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
@@ -241,15 +247,15 @@ fun SectionHeader(title: String, actionText: String) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = title,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
+            text = title, 
+            fontSize = 18.sp, 
+            fontWeight = FontWeight.Bold, 
             color = MaterialTheme.colorScheme.onBackground
         )
         TextButton(onClick = { }, contentPadding = PaddingValues(0.dp)) {
             Text(
-                text = actionText,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                text = actionText, 
+                color = MaterialTheme.colorScheme.onSurfaceVariant, 
                 fontSize = 14.sp
             )
         }

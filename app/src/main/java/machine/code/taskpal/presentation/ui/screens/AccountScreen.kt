@@ -1,4 +1,4 @@
-package machine.code.taskpal.ui
+package machine.code.taskpal.presentation.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,10 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import machine.code.taskpal.ui.theme.TaskpalTheme
+import machine.code.taskpal.presentation.ui.components.TaskpalBottomNavigation
+import machine.code.taskpal.presentation.ui.theme.TaskpalTheme
 
 @Composable
-fun AccountScreen(onNavigate: (String) -> Unit) {
+fun AccountScreen(onNavigate: (String) -> Unit, onBack: () -> Unit = {}) {
     Scaffold(
         bottomBar = { TaskpalBottomNavigation(currentScreen = "account", onScreenSelected = onNavigate) },
         containerColor = MaterialTheme.colorScheme.background

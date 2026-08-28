@@ -1,4 +1,4 @@
-package machine.code.taskpal.ui.theme
+package machine.code.taskpal.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
