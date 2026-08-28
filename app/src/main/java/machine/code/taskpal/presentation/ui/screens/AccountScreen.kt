@@ -18,15 +18,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil3.compose.AsyncImage
 import machine.code.taskpal.presentation.ui.components.TaskpalBottomNavigation
 import machine.code.taskpal.presentation.ui.theme.TaskpalTheme
+import machine.code.taskpal.presentation.viewmodel.ProfileVM
 
 @Composable
-fun AccountScreen(onNavigate: (String) -> Unit, onBack: () -> Unit = {}) {
+fun AccountScreen(
+    onNavigate: (String) -> Unit,
+    onBack: () -> Unit = {},
+    viewModel: ProfileVM = hiltViewModel()
+) {
+    val state by viewModel.uiState.collectAsState()
+
     Scaffold(
         bottomBar = { TaskpalBottomNavigation(currentScreen = "account", onScreenSelected = onNavigate) },
         containerColor = MaterialTheme.colorScheme.background
@@ -40,51 +50,42 @@ fun AccountScreen(onNavigate: (String) -> Unit, onBack: () -> Unit = {}) {
         ) {
             Spacer(modifier = Modifier.height(40.dp))
 
-            ProfileHeader()
+            ProfileHeader(
+                userName = state.userName,
+                profileImage = state.profileImage
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             SectionHeader(title = "Preferences")
             Spacer(modifier = Modifier.height(16.dp))
             
-            PreferenceToggleItem(
-                icon = Icons.Outlined.NotificationsActive,
-                title = "Motivation Nudges",
-                initialValue = true
-            )
-            PreferenceToggleItem(
-                icon = Icons.Outlined.LocalFireDepartment,
-                title = "Streak Reminders",
-                initialValue = true
-            )
-            PreferenceToggleItem(
-                icon = Icons.Outlined.Timer,
-                title = "Task Deadline Reminders",
-                initialValue = true
-            )
+            state.preferences.forEach { item ->
+                PreferenceToggleItem(
+                    icon = item.icon,
+                    title = item.title,
+                    checked = item.isEnabled,
+                    onCheckedChange = { viewModel.togglePreference(item.id, it) }
+                )
+            }
 
             Spacer(modifier = Modifier.height(32.dp))
 
             SectionHeader(title = "Support & Info")
             Spacer(modifier = Modifier.height(16.dp))
             
-            SupportItem(
-                icon = Icons.AutoMirrored.Outlined.HelpOutline,
-                title = "Help & Support"
-            )
-            SupportItem(
-                icon = Icons.Outlined.Shield,
-                title = "Privacy Policy"
-            )
-            SupportItem(
-                icon = Icons.Outlined.Description,
-                title = "Terms of Service"
-            )
+            state.supportInfo.forEach { item ->
+                SupportItem(
+                    icon = item.icon,
+                    title = item.title,
+                    onClick = { /* TODO: Handle click */ }
+                )
+            }
 
             Spacer(modifier = Modifier.height(32.dp))
 
             Surface(
-                onClick = { /* TODO: Logout */ },
+                onClick = { viewModel.logout() },
                 color = Color.Transparent,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -118,22 +119,25 @@ fun AccountScreen(onNavigate: (String) -> Unit, onBack: () -> Unit = {}) {
 }
 
 @Composable
-fun ProfileHeader() {
+fun ProfileHeader(userName: String, profileImage: String) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
+        AsyncImage(
+            model = profileImage,
+            contentDescription = "Profile Image",
             modifier = Modifier
                 .size(80.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            contentScale = ContentScale.Crop
         )
         
         Spacer(modifier = Modifier.height(16.dp))
         
         Text(
-            text = "Christopher Johnson",
+            text = userName,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -154,9 +158,12 @@ fun ProfileHeader() {
 }
 
 @Composable
-fun PreferenceToggleItem(icon: ImageVector, title: String, initialValue: Boolean) {
-    var checked by remember { mutableStateOf(initialValue) }
-    
+fun PreferenceToggleItem(
+    icon: ImageVector,
+    title: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -180,7 +187,7 @@ fun PreferenceToggleItem(icon: ImageVector, title: String, initialValue: Boolean
         }
         Switch(
             checked = checked,
-            onCheckedChange = { checked = it },
+            onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
                 checkedTrackColor = MaterialTheme.colorScheme.primary,
@@ -193,9 +200,9 @@ fun PreferenceToggleItem(icon: ImageVector, title: String, initialValue: Boolean
 }
 
 @Composable
-fun SupportItem(icon: ImageVector, title: String) {
+fun SupportItem(icon: ImageVector, title: String, onClick: () -> Unit) {
     Surface(
-        onClick = { },
+        onClick = onClick,
         color = Color.Transparent,
         modifier = Modifier.fillMaxWidth()
     ) {

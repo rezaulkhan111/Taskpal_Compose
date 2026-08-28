@@ -12,7 +12,11 @@ import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material.icons.outlined.LocalFireDepartment
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.hilt.navigation.compose.hiltViewModel
+import machine.code.taskpal.presentation.viewmodel.StreakVM
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -25,7 +29,13 @@ import machine.code.taskpal.presentation.ui.components.TaskpalBottomNavigation
 import machine.code.taskpal.presentation.ui.theme.TaskpalTheme
 
 @Composable
-fun StreaksScreen(onNavigate: (String) -> Unit, onBack: () -> Unit = {}) {
+fun StreaksScreen(
+    onNavigate: (String) -> Unit,
+    onBack: () -> Unit = {},
+    viewModel: StreakVM = hiltViewModel()
+) {
+    val state by viewModel.streakState.collectAsState()
+
     Scaffold(
         bottomBar = { TaskpalBottomNavigation(currentScreen = "streaks", onScreenSelected = onNavigate) },
         containerColor = MaterialTheme.colorScheme.background
@@ -78,7 +88,7 @@ fun StreaksScreen(onNavigate: (String) -> Unit, onBack: () -> Unit = {}) {
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 Text(
-                    text = "7-Day Streak!",
+                    text = "${state.streakCount}-Day Streak!",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
@@ -87,7 +97,7 @@ fun StreaksScreen(onNavigate: (String) -> Unit, onBack: () -> Unit = {}) {
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 Text(
-                    text = "Way to go, buddy! You've been crushing\ntasks 7 days in a row ✔️",
+                    text = "Way to go, buddy! You've been crushing\ntasks ${state.streakCount} days in a row ✔️",
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -110,11 +120,8 @@ fun StreaksScreen(onNavigate: (String) -> Unit, onBack: () -> Unit = {}) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                val days = listOf("Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun")
-                val completed = listOf(true, true, true, true, true, true, false)
-                
-                days.forEachIndexed { index, day ->
-                    DayItem(day = day, isCompleted = completed[index])
+                state.weeklyProgress.forEach { dayProgress ->
+                    DayItem(day = dayProgress.day, isCompleted = dayProgress.isCompleted)
                 }
             }
             
@@ -126,11 +133,11 @@ fun StreaksScreen(onNavigate: (String) -> Unit, onBack: () -> Unit = {}) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(text = "Weekly Progress", fontSize = 12.sp, color = Color.Gray)
-                    Text(text = "6/7 days", fontSize = 12.sp, color = Color.Gray)
+                    Text(text = "${state.completedDaysCount}/${state.totalDays} days", fontSize = 12.sp, color = Color.Gray)
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 LinearProgressIndicator(
-                    progress = { 6f / 7f },
+                    progress = { state.progressFraction },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(8.dp)
@@ -182,7 +189,7 @@ fun StreaksScreen(onNavigate: (String) -> Unit, onBack: () -> Unit = {}) {
                     Column {
                         Text(text = "Current Streak", fontSize = 12.sp, color = Color.Gray)
                         Text(
-                            text = "6 days",
+                            text = "${state.streakCount} days",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface

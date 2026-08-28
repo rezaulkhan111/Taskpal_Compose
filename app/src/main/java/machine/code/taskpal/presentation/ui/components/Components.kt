@@ -1,6 +1,8 @@
 package machine.code.taskpal.presentation.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -113,49 +115,69 @@ fun TaskpalBottomNavigation(currentScreen: String, onScreenSelected: (String) ->
 
 @Composable
 fun TaskItem(title: String, dueTime: String, isCompleted: Boolean) {
-    Surface(
+    Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 0.5.dp
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             RadioButton(
-                selected = isCompleted, 
+                selected = isCompleted,
                 onClick = { },
                 colors = RadioButtonDefaults.colors(
                     selectedColor = MaterialTheme.colorScheme.primary,
                     unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            Column {
+            
+            Spacer(modifier = Modifier.width(12.dp))
+            
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
                     fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
+                
+                Spacer(modifier = Modifier.height(4.dp))
+                
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        Icons.Outlined.AccessTime,
+                        imageVector = Icons.Outlined.AccessTime,
                         contentDescription = null,
-                        tint = Color(0xFFFF9800),
+                        tint = if (isSystemInDarkTheme()) Color(0xFFFFB74D) else Color(0xFFFF9800),
                         modifier = Modifier.size(14.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = dueTime, fontSize = 13.sp, color = Color(0xFFFF9800))
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = dueTime,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = if (isSystemInDarkTheme()) Color(0xFFFFB74D) else Color(0xFFFF9800)
+                    )
                 }
             }
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                Icons.Default.MoreVert, 
-                contentDescription = null, 
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            
+            IconButton(onClick = { }) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "Options",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }

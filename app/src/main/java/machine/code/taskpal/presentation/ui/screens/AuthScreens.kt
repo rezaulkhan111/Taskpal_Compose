@@ -325,10 +325,11 @@ fun RegistrationScreen(onBackClick: () -> Unit, onRegisterSuccess: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
-    onBackClick: () -> Unit, onRegisterClick: () -> Unit, onSignInSuccess: () -> Unit
+    onBackClick: () -> Unit,
+    onRegisterClick: () -> Unit,
+    onSignInSuccess: () -> Unit,
+    viewModel: LoginVM = hiltViewModel()
 ) {
-    val viewModel: LoginVM = hiltViewModel()
-
     var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
